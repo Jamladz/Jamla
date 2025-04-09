@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="متجر Jamla الإلكتروني - أفضل الملابس الرجالية والأحذية بأسعار تنافسية">
+    <meta name="keywords" content="ملابس رجالية, أحذية, موضة, تسوق إلكتروني, جملة">
+    <title>عرض المنتج - Jamla</title>
+    <style>
+        :root {
+            --primary-color: #FFD700; /* أصفر ذهبي */
+            --secondary-color: #FFF8E1;
+            --accent-color: #FFC107;
+            --text-color: #333;
+            --light-text: #777;
+            --bg-color: #FFF;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --glass-effect: rgba(255, 255, 255, 0.2);
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 100%;
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+        
+        /* هيدر التطبيق */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .app-header h1 {
+            margin: 0;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .back-button {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
+        }
+        
+        /* قسم عرض المنتج */
+        .product-details {
+            padding: 15px;
+        }
+        
+        .product-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+        }
+        
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0 0 15px 0;
+        }
+        
+        .old-price {
+            text-decoration: line-through;
+            font-size: 16px;
+            color: var(--light-text);
+            margin-right: 5px;
+        }
+        
+        .product-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        /* فيديو المنتج */
+        .product-video {
+            width: 100%;
+            height: 250px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .product-video iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* معرض الصور */
+        .product-gallery {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) #f1f1f1;
+        }
+        
+        .product-gallery::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .product-gallery::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .product-gallery::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+        }
+        
+        .product-gallery img {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .product-gallery img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* نافذة الصورة المكبرة - النسخة المطورة */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            overflow: auto;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+        
+        .modal-container {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-content {
+            max-width: 100%;
+            max-height: calc(90vh - 60px);
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            transform: scale(0.95);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            margin: 0 auto;
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+        
+        .nav-btn {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .prev-btn {
+            right: 20px;
+        }
+        
+        .next-btn {
+            left: 20px;
+        }
+        
+        .modal-footer {
+            text-align: center;
+            color: white;
+            padding: 10px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .modal-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* زر التنزيل في الصورة المكبرة - النسخة المعدلة */
+        .download-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .download-btn:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+        
+        .download-btn i {
+            font-size: 18px;
+        }
+        
+        /* زر الخروج (X) في الصورة المكبرة */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+        
+        .close-btn:hover {
+            background-color: #ff3333;
+            transform: scale(1.1);
+        }
+        
+        /* رسالة تنزيل الصورة */
+        .download-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 9999;
+            transition: opacity 0.5s;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .download-toast.show {
+            opacity: 1;
+        }
+        
+        /* وصف المنتج */
+        .product-description {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .product-description h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+        
+        .product-description p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--light-text);
+        }
+        
+        /* نموذج الطلب */
+        .order-form {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .order-form h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            color: var(--text-color);
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 10px center;
+            padding-right: 10px;
+            pointer-events: none;
+        }
+        
+        .wilaya-select-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .wilaya-select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-color);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        /* تنبيه الطلب */
+        .order-alert {
+            background-color: #f8f9fa;
+            border-right: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .order-alert h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .order-alert h4 i {
+            margin-left: 5px;
+            color: var(--primary-color);
+        }
+        
+        .order-alert p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--light-text);
+        }
+        
+        /* وسائل التواصل */
+        .contact-methods {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        
+        .contact-method {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            position: relative;
+        }
+        
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-icon i {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .contact-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .contact-badge {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .contact-method:hover .contact-icon {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* زر العودة للأعلى */
+        .back-to-top {
+            position: fixed;
+            bottom: 70px;
+            left: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: transform 0.3s;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* رسالة الخطأ */
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* أنماط جديدة للنافذة المنبثقة للولاية */
+        .wilaya-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .wilaya-modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .wilaya-modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .wilaya-modal-body {
+            padding: 15px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .wilaya-modal-footer {
+            padding: 15px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+        
+        .wilaya-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .wilaya-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .wilaya-item:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .wilaya-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .wilaya-search {
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        /* زر الألوان متوفرة */
+        .colors-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .colors-btn:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* نافذة الألوان المنبثقة */
+        .colors-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .colors-modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s;
+        }
+        
+        .colors-modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            position: relative;
+        }
+        
+        .colors-modal-close {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .colors-modal-body {
+            padding: 15px;
+        }
+        
+        .color-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .color-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 10px;
+            border: 2px solid #ddd;
+        }
+        
+        .color-yellow {
+            background-color: #FFD700;
+        }
+        
+        .color-black {
+            background-color: #000000;
+        }
+        
+        .color-white {
+            background-color: #FFFFFF;
+            border: 1px solid #ddd;
+        }
+        
+        .color-quantity {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .color-quantity input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        .color-name {
+            font-weight: bold;
+            min-width: 60px;
+        }
+        
+        .colors-modal-footer {
+            padding: 15px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+        
+        .save-colors-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .save-colors-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .color-error {
+            color: red;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        /* تعديلات للعرض على الجوال */
+        @media (max-width: 768px) {
+            .modal-content {
+                max-height: calc(90vh - 40px);
+            }
+            
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .modal-counter {
+                font-size: 12px;
+                padding: 3px 10px;
+            }
+            
+            .wilaya-modal-content {
+                width: 95%;
+                max-height: 85vh;
+            }
+            
+            .contact-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .contact-icon i {
+                font-size: 20px;
+            }
+            
+            .contact-text {
+                font-size: 12px;
+            }
+            
+            .colors-modal-content {
+                width: 95%;
+            }
+        }
+        
+        /* شريط التنبيه للواتساب */
+        .whatsapp-alert {
+            background-color: #25D366;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: fadeInUp 0.5s;
+        }
+        
+        .whatsapp-alert i {
+            font-size: 20px;
+            margin-left: 10px;
+        }
+        
+        .whatsapp-alert span {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* رسالة تأكيد الحفظ */
+        .save-confirmation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            z-index: 9999;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- هيدر التطبيق -->
+        <header class="app-header">
+            <a href="products.html" class="back-button">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            <h1>عرض المنتج</h1>
+        </header>
+        
+        <!-- قسم عرض المنتج -->
+        <div class="product-details">
+            <h1 class="product-name">جاكيت رجالي جلد طبيعي - موديل 2025</h1>
+            <span class="product-badge">الأكثر مبيعاً</span>
+            <p class="product-price">
+                <span class="old-price">4500 د.ج</span>
+                3990 د.ج
+            </p>
+            
+            <!-- فيديو المنتج -->
+            <div class="product-video">
+                <iframe src="https://www.youtube.com/embed/a1xdVQyc6XY" frameborder="0" allowfullscreen></iframe>
+            </div>
+            
+            <!-- معرض الصور -->
+            <div class="product-gallery">
+                <img src="https://i.suar.me/j5yqr/l" 
+                     alt="صورة المنتج 1" 
+                     onclick="openModal(this)"
+                     loading="lazy"
+                     data-original="https://i.suar.me/j5yqr/l">
+                <img src="https://i.suar.me/Ozqyw/l" 
+                     alt="صورة المنتج 2" 
+                     onclick="openModal(this)"
+                     loading="lazy"
+                     data-original="https://i.suar.me/Ozqyw/l">
+                <img src="https://i.suar.me/Nzly9/l" 
+                     alt="صورة المنتج 3" 
+                     onclick="openModal(this)"
+                     loading="lazy"
+                     data-original="https://i.suar.me/Ozqyw/l">
+                <img src="https://i.suar.me/dpo6J/l" 
+                     alt="صورة المنتج 4" 
+                     onclick="openModal(this)"
+                     loading="lazy"
+                     data-original="https://i.suar.me/Nzly9/l">
+            </div>
+            
+            <!-- زر الألوان متوفرة -->
+            <button class="colors-btn" onclick="openColorsModal()">
+                <i class="fas fa-palette"></i> الألوان متوفرة
+            </button>
+            
+            <!-- نافذة الصورة المكبرة المطورة -->
+            <div id="imageModal" class="modal">
+                <div class="modal-container">
+                    <button class="close-btn" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <button class="download-btn" onclick="downloadImage()">
+                        تنزيل صورة <i class="fas fa-download"></i>
+                    </button>
+                    <div class="modal-nav">
+                        <button class="nav-btn prev-btn" onclick="navigate(-1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button class="nav-btn next-btn" onclick="navigate(1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    </div>
+                    <img class="modal-content" id="modalImage">
+                    <div class="modal-counter" id="imageCounter"></div>
+                </div>
+            </div>
+            
+            <!-- نافذة الألوان المنبثقة -->
+            <div id="colorsModal" class="colors-modal">
+                <div class="colors-modal-content">
+                    <div class="colors-modal-header">
+                        اختر الألوان والكميات المطلوبة
+                        <button class="colors-modal-close" onclick="closeColorsModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="colors-modal-body">
+                        <div class="color-option">
+                            <div class="color-circle color-yellow"></div>
+                            <span class="color-name">أصفر</span>
+                            <div class="color-quantity">
+                                <input type="number" id="yellowQuantity" min="0" value="0" class="form-control" onchange="validateColorQuantities()">
+                                <span>سيري</span>
+                            </div>
+                        </div>
+                        
+                        <div class="color-option">
+                            <div class="color-circle color-black"></div>
+                            <span class="color-name">أسود</span>
+                            <div class="color-quantity">
+                                <input type="number" id="blackQuantity" min="0" value="0" class="form-control" onchange="validateColorQuantities()">
+                                <span>سيري</span>
+                            </div>
+                        </div>
+                        
+                        <div class="color-option">
+                            <div class="color-circle color-white"></div>
+                            <span class="color-name">أبيض</span>
+                            <div class="color-quantity">
+                                <input type="number" id="whiteQuantity" min="0" value="0" class="form-control" onchange="validateColorQuantities()">
+                                <span>سيري</span>
+                            </div>
+                        </div>
+                        
+                        <div id="colorError" class="color-error">
+                            يجب اختيار 2 سيري على الأقل من نفس اللون أو لونين مختلفين
+                        </div>
+                    </div>
+                    <div class="colors-modal-footer">
+                        <button class="save-colors-btn" onclick="saveColors()">
+                            <i class="fas fa-save"></i> حفظ
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- رسالة تنزيل الصورة -->
+            <div id="downloadToast" class="download-toast"></div>
+            
+            <!-- رسالة تأكيد الحفظ -->
+            <div id="saveConfirmation" class="save-confirmation">
+                تم حفظ اختيارات الألوان بنجاح
+            </div>
+            
+            <!-- شريط تنبيه الواتساب -->
+            <div class="whatsapp-alert">
+                <i class="fab fa-whatsapp"></i>
+                <span>يمكنك الدردشة معنا والاستفسار عن المنتج عبر الواتساب على الرقم 0772370858</span>
+            </div>
+            
+            <!-- وصف المنتج -->
+            <div class="product-description">
+                <h3>وصف المنتج</h3>
+                <p>
+                   T shirt Demi Zip
+        وفرنالكم وش حابين لفار لي ما تترطاش
+     لي وصاوني على سامبل راه متوفر عندنا فقط 
+             سامبل ف اولد موني 2024 2025  
+                    <br><br>
+            -ڨلاصي جاي مقطن من داخل<br>
+                       -فيه كل ألوان<br>
+             -مقاسات S M L XL XXL <br>
+                   
+                </p>
+            </div>
+            
+            <!-- تنبيه الطلب -->
+            <div class="order-alert">
+                <h4><i class="fas fa-info-circle"></i> تنبيه مهم</h4>
+                <p>
+                    بعد تقديم الطلب سيتم التواصل معك خلال ساعة لتأكيد الطلب وتحديد طريقة الدفع والتوصيل.
+                    يرجى التأكد من صحة المعلومات المقدمة خاصة رقم الهاتف.
+                    <br><br>
+                    <strong>ملاحظة:</strong> الدفع عند الاستلام بعد التأكد من جودة المنتج.
+                </p>
+            </div>
+            
+            <!-- وسائل التواصل -->
+            <div class="contact-methods">
+                <a href="tel:0772370858" class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <span class="contact-text">اتصل بنا الآن</span>
+                    <div class="contact-badge">24/12</div>
+                </a>
+                <a href="https://wa.me/213772370858" class="contact-method" target="_blank">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <span class="contact-text">دردشة عبر الواتساب</span>
+                    <div class="contact-badge">24/12</div>
+                </a>
+            </div>
+            
+            <!-- نموذج الطلب -->
+            <div class="order-form">
+                <h3>نموذج طلب المنتج</h3>
+                
+                <form id="productOrderForm">
+                    <input type="hidden" id="productName" value="جاكيت رجالي جلد طبيعي - موديل 2025">
+                    <input type="hidden" id="yellowQty" value="0">
+                    <input type="hidden" id="blackQty" value="0">
+                    <input type="hidden" id="whiteQty" value="0">
+                    
+                    <div class="form-group">
+                        <label for="quantity">الكمية الإجمالية</label>
+                        <input type="number" class="form-control" id="quantity" 
+                               min="1" value="1" step="1" 
+                               placeholder="أدخل الكمية الإجمالية" required
+                               oninput="validateQuantity(this)">
+                        <div id="quantityError" class="error-message">الحد الأدنى للكمية هو 1</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fullName">الاسم الكامل</label>
+                        <input type="text" class="form-control" id="fullName" placeholder="أدخل اسمك الكامل" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف</label>
+                        <input type="tel" class="form-control" id="phone" placeholder="أدخل رقم هاتفك" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="wilaya">الولاية</label>
+                        <div class="wilaya-select-wrapper">
+                            <select class="form-control" id="wilaya" required>
+                                <option value="" disabled selected>اختر ولايتك</option>
+                                <option value="أدرار">أدرار</option>
+                                <option value="الشلف">الشلف</option>
+                                <option value="الأغواط">الأغواط</option>
+                                <option value="أم البواقي">أم البواقي</option>
+                                <option value="باتنة">باتنة</option>
+                                <option value="بجاية">بجاية</option>
+                                <option value="بسكرة">بسكرة</option>
+                                <option value="بشار">بشار</option>
+                                <option value="البليدة">البليدة</option>
+                                <option value="البويرة">البويرة</option>
+                                <option value="تمنراست">تمنراست</option>
+                                <option value="تبسة">تبسة</option>
+                                <option value="تلمسان">تلمسان</option>
+                                <option value="تيارت">تيارت</option>
+                                <option value="تيزي وزو">تيزي وزو</option>
+                                <option value="الجزائر">الجزائر</option>
+                                <option value="الجلفة">الجلفة</option>
+                                <option value="جيجل">جيجل</option>
+                                <option value="سطيف">سطيف</option>
+                                <option value="سعيدة">سعيدة</option>
+                                <option value="سكيكدة">سكيكدة</option>
+                                <option value="سيدي بلعباس">سيدي بلعباس</option>
+                                <option value="عنابة">عنابة</option>
+                                <option value="قالمة">قالمة</option>
+                                <option value="قسنطينة">قسنطينة</option>
+                                <option value="المدية">المدية</option>
+                                <option value="مستغانم">مستغانم</option>
+                                <option value="المسيلة">المسيلة</option>
+                                <option value="معسكر">معسكر</option>
+                                <option value="ورقلة">ورقلة</option>
+                                <option value="وهران">وهران</option>
+                                <option value="البيض">البيض</option>
+                                <option value="إليزي">إليزي</option>
+                                <option value="برج بوعريريج">برج بوعريريج</option>
+                                <option value="بومرداس">بومرداس</option>
+                                <option value="الطارف">الطارف</option>
+                                <option value="تندوف">تندوف</option>
+                                <option value="تيسمسيلت">تيسمسيلت</option>
+                                <option value="الوادي">الوادي</option>
+                                <option value="خنشلة">خنشلة</option>
+                                <option value="سوق أهراس">سوق أهراس</option>
+                                <option value="تيبازة">تيبازة</option>
+                                <option value="ميلة">ميلة</option>
+                                <option value="عين الدفلى">عين الدفلى</option>
+                                <option value="النعامة">النعامة</option>
+                                <option value="عين تموشنت">عين تموشنت</option>
+                                <option value="غرداية">غرداية</option>
+                                <option value="غليزان">غليزان</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="commune">البلدية</label>
+                        <input type="text" class="form-control" id="commune" placeholder="أدخل اسم البلدية" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">إرسال الطلب</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- نافذة الولاية المنبثقة -->
+        <div id="wilayaModal" class="wilaya-modal">
+            <div class="wilaya-modal-content">
+                <div class="wilaya-modal-header">
+                    اختر ولايتك
+                </div>
+                <div class="wilaya-modal-body">
+                    <input type="text" id="wilayaSearch" class="wilaya-search" placeholder="ابحث عن ولاية...">
+                    <ul class="wilaya-list" id="wilayaList">
+                        <!-- سيتم ملء القائمة بالولايات عبر JavaScript -->
+                    </ul>
+                </div>
+                <div class="wilaya-modal-footer">
+                    <button id="closeWilayaModal" class="submit-btn" style="width: auto; padding: 8px 20px;">إغلاق</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- زر العودة للأعلى -->
+        <a href="#" class="back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+
+    <!-- إضافة مكتبة jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // عناصر نافذة الولاية المنبثقة
+            const wilayaSelect = document.getElementById('wilaya');
+            const wilayaModal = document.getElementById('wilayaModal');
+            const wilayaList = document.getElementById('wilayaList');
+            const wilayaSearch = document.getElementById('wilayaSearch');
+            const closeWilayaModal = document.getElementById('closeWilayaModal');
+
+            // تعبئة قائمة الولايات
+            function populateWilayaList() {
+                wilayaList.innerHTML = '';
+                const options = wilayaSelect.options;
+                
+                for (let i = 1; i < options.length; i++) {
+                    const option = options[i];
+                    const li = document.createElement('li');
+                    li.className = 'wilaya-item';
+                    li.textContent = option.text;
+                    li.dataset.value = option.value;
+                    
+                    li.addEventListener('click', function() {
+                        // تحديث القيمة المختارة
+                        wilayaSelect.value = this.dataset.value;
+                        // إغلاق النافذة المنبثقة
+                        wilayaModal.style.display = 'none';
+                        // إزالة التنشيط من جميع العناصر
+                        document.querySelectorAll('.wilaya-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        // تنشيط العنصر المحدد
+                        this.classList.add('active');
+                    });
+                    
+                    wilayaList.appendChild(li);
+                }
+            }
+
+            // فتح نافذة الولاية المنبثقة عند النقر على حقل الولاية
+            document.querySelector('.wilaya-select-wrapper').addEventListener('click', function() {
+                wilayaModal.style.display = 'flex';
+                populateWilayaList();
+                wilayaSearch.focus();
+            });
+
+            // البحث في قائمة الولايات
+            wilayaSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const items = wilayaList.querySelectorAll('.wilaya-item');
+                
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+
+            // إغلاق نافذة الولاية المنبثقة
+            closeWilayaModal.addEventListener('click', function() {
+                wilayaModal.style.display = 'none';
+            });
+
+            // إغلاق النافذة عند النقر خارجها
+            wilayaModal.addEventListener('click', function(e) {
+                if (e.target === wilayaModal) {
+                    wilayaModal.style.display = 'none';
+                }
+            });
+
+            // زر العودة للأعلى
+            const backToTopBtn = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // إرسال نموذج الطلب إلى جوجل شيت
+            const orderForm = document.getElementById('productOrderForm');
+            
+            orderForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // التحقق من صحة الكمية قبل الإرسال
+                const quantity = parseInt(document.getElementById('quantity').value);
+                if (quantity < 1) {
+                    document.getElementById('quantityError').style.display = 'block';
+                    document.getElementById('quantity').focus();
+                    return;
+                }
+                
+                // جمع بيانات النموذج
+                const productName = document.getElementById('productName').value;
+                const fullName = document.getElementById('fullName').value;
+                const phone = document.getElementById('phone').value;
+                const wilaya = document.getElementById('wilaya').value;
+                const commune = document.getElementById('commune').value;
+                const yellowQty = document.getElementById('yellowQty').value;
+                const blackQty = document.getElementById('blackQty').value;
+                const whiteQty = document.getElementById('whiteQty').value;
+                
+                // رابط جوجل شيت (استبدل هذا برابط النموذج الخاص بك)
+                const googleFormUrl = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse';
+                
+                // إعداد البيانات للإرسال
+                const formData = new FormData();
+                formData.append('entry.123456789', productName); // استبدل بأرقام حقول جوجل شيت
+                formData.append('entry.987654321', quantity);
+                formData.append('entry.111111111', fullName);
+                formData.append('entry.222222222', phone);
+                formData.append('entry.333333333', wilaya);
+                formData.append('entry.444444444', commune);
+                formData.append('entry.555555555', yellowQty); // الكمية للون الأصفر
+                formData.append('entry.666666666', blackQty); // الكمية للون الأسود
+                formData.append('entry.777777777', whiteQty); // الكمية للون الأبيض
+                
+                // إرسال البيانات إلى جوجل شيت
+                fetch(googleFormUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: formData
+                })
+                .then(() => {
+                    // رسالة نجاح
+                    const orderDetails = `
+                        تم استلام طلبك بنجاح!
+                        التفاصيل:
+                        - المنتج: ${productName}
+                        - الكمية الإجمالية: ${quantity}
+                        - الأصفر: ${yellowQty} قطعة
+                        - الأسود: ${blackQty} قطعة
+                        - الأبيض: ${whiteQty} قطعة
+                        - الاسم: ${fullName}
+                        - الهاتف: ${phone}
+                        - الولاية: ${wilaya}
+                        - البلدية: ${commune}
+                        
+                        سيتم التواصل معك خلال 24 ساعة لتأكيد الطلب.
+                        الدفع عند الاستلام بعد التأكد من جودة المنتج.
+                    `;
+                    
+                    alert(orderDetails);
+                    
+                    // إعادة تعيين النموذج بعد الإرسال
+                    orderForm.reset();
+                    $('#wilaya').val(null).trigger('change');
+                    $('#quantity').val(1); // إعادة تعيين الكمية إلى 1
+                    document.getElementById('quantityError').style.display = 'none';
+                    
+                    // إرسال رسالة واتساب تلقائية (اختياري)
+                    const whatsappMessage = `مرحباً، أنا مهتم بشراء المنتج التالي:
+                    
+المنتج: ${productName}
+الكمية الإجمالية: ${quantity}
+الأصفر: ${yellowQty} قطعة
+الأسود: ${blackQty} قطعة
+الأبيض: ${whiteQty} قطعة
+الاسم: ${fullName}
+الهاتف: ${phone}
+الولاية: ${wilaya}
+البلدية: ${commune}
+
+الرجاء التواصل معي لتأكيد الطلب.`;
+                    
+                    const whatsappUrl = `https://wa.me/213772370858?text=${encodeURIComponent(whatsappMessage)}`;
+                    // window.open(whatsappUrl, '_blank'); // يمكن فتح هذه السطر إذا أردت فتح الواتساب تلقائياً
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى أو التواصل معنا عبر الواتساب.');
+                });
+            });
+        });
+        
+        // التحقق من صحة حقل الكمية
+        function validateQuantity(input) {
+            const errorElement = document.getElementById('quantityError');
+            if (input.value < 1) {
+                errorElement.style.display = 'block';
+                input.setCustomValidity('الحد الأدنى للكمية هو 1');
+            } else {
+                errorElement.style.display = 'none';
+                input.setCustomValidity('');
+            }
+        }
+        
+        // تطوير نافذة الصورة المكبرة
+        let currentImageIndex = 0;
+        const galleryImages = document.querySelectorAll('.product-gallery img');
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const imageCounter = document.getElementById('imageCounter');
+        const downloadToast = document.getElementById('downloadToast');
+        
+        // تحميل الصور مسبقاً لضمان عمل المعرض
+        function preloadImages() {
+            galleryImages.forEach(img => {
+                const imgObj = new Image();
+                imgObj.src = img.dataset.original || img.src;
+            });
+        }
+        
+        // تنفيذ تحميل الصور عند تحميل الصفحة
+        window.addEventListener('load', preloadImages);
+        
+        // فتح النافذة المنبثقة مع تحسينات
+        function openModal(img) {
+            // التحقق من وجود الصور في المعرض
+            if (!galleryImages || galleryImages.length === 0) {
+                console.error('لا توجد صور في المعرض');
+                return;
+            }
+            
+            // تحديد الفهرس الحالي
+            currentImageIndex = Array.from(galleryImages).indexOf(img);
+            
+            // التحقق من صحة الفهرس
+            if (currentImageIndex < 0 || currentImageIndex >= galleryImages.length) {
+                currentImageIndex = 0;
+            }
+            
+            // تحديث الصورة في النافذة المنبثقة
+            updateModalImage();
+            
+            // إضافة كلاس show للنافذة بعد تأخير بسيط لتفعيل الانتقال
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+            
+            // منع التمرير عند فتح النافذة
+            document.body.style.overflow = 'hidden';
+            
+            // إضافة مستمعي الأحداث للوحة المفاتيح
+            document.addEventListener('keydown', handleKeyDown);
+        }
+        
+        // إغلاق النافذة المنبثقة
+        function closeModal() {
+            // إزالة كلاس show للنافذة لإخفائها مع الانتقال
+            modal.classList.remove('show');
+            
+            // إعادة التمرير بعد إغلاق النافذة
+            setTimeout(() => {
+                document.body.style.overflow = 'auto';
+            }, 300); // الانتظار حتى ينتهي الانتقال
+            
+            // إزالة مستمعي الأحداث للوحة المفاتيح
+            document.removeEventListener('keydown', handleKeyDown);
+        }
+        
+        // تنزيل الصورة الحالية مع تحسينات
+        function downloadImage() {
+            const currentImage = galleryImages[currentImageIndex];
+            const imgSrc = currentImage.dataset.original || currentImage.src;
+            const imgAlt = currentImage.alt || 'product-image';
+            
+            if (!imgSrc) {
+                console.error('لا توجد صورة للتنزيل');
+                showDownloadToast('حدث خطأ أثناء محاولة تنزيل الصورة');
+                return;
+            }
+            
+            // إنشاء اسم ملف مناسب للتنزيل
+            const fileName = imgAlt.replace(/[^\w\u0600-\u06FF]/g, '-') // استبدال المسافات والرموز بشرطات
+                                 .replace(/-+/g, '-') // إزالة الشرطات المتكررة
+                                 .replace(/^-|-$/g, ''); // إزالة الشرطات من البداية والنهاية
+            
+            // إظهار رسالة تأكيد للمستخدم
+            showDownloadToast('جاري تحميل الصورة...');
+            
+            // معالجة خاصة للأجهزة المحمولة
+            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                downloadImageForMobile(imgSrc, fileName);
+            } else {
+                // طريقة التنزيل العادية لأجهزة الكمبيوتر
+                const link = document.createElement('a');
+                link.href = imgSrc;
+                link.download = fileName + '.jpg';
+                link.target = '_blank';
+                
+                // إضافة العنصر إلى الصفحة والنقر عليه برمجياً
+                document.body.appendChild(link);
+                link.click();
+                
+                // إزالة العنصر بعد التنزيل
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                }, 100);
+            }
+        }
+        
+        // دالة خاصة بتنزيل الصور على الأجهزة المحمولة
+        function downloadImageForMobile(url, filename) {
+            showDownloadToast('جاري تحضير الصورة للتنزيل...');
+            
+            // إنشاء عنصر iframe خفي لفتح الصورة في نافذة جديدة
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = url;
+            document.body.appendChild(iframe);
+            
+            // بعد تحميل الصورة في iframe
+            iframe.onload = function() {
+                try {
+                    // إنشاء عنصر <a> للتنزيل
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename + '.jpg';
+                    a.style.display = 'none';
+                    
+                    // إضافة العنصر إلى الصفحة والنقر عليه
+                    document.body.appendChild(a);
+                    a.click();
+                    
+                    // تنظيف الذاكرة بعد التنزيل
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        document.body.removeChild(iframe);
+                    }, 100);
+                    
+                    showDownloadToast('تم تحضير الصورة للتنزيل');
+                    
+                    // فتح الصورة في نافذة جديدة للسماح للمستخدم بحفظها يدوياً
+                    setTimeout(() => {
+                        window.open(url, '_blank');
+                    }, 500);
+                } catch (error) {
+                    console.error('حدث خطأ أثناء تنزيل الصورة:', error);
+                    showDownloadToast('حدث خطأ، يرجى المحاولة مرة أخرى');
+                    
+                    // فتح الصورة في نافذة جديدة كحل بديل
+                    setTimeout(() => {
+                        window.open(url, '_blank');
+                    }, 500);
+                }
+            };
+            
+            // في حالة حدوث خطأ في تحميل iframe
+            iframe.onerror = function() {
+                console.error('حدث خطأ في تحميل الصورة');
+                showDownloadToast('حدث خطأ في تحميل الصورة');
+                document.body.removeChild(iframe);
+                
+                // فتح الصورة في نافذة جديدة كحل بديل
+                setTimeout(() => {
+                    window.open(url, '_blank');
+                }, 500);
+            };
+        }
+        
+        // إظهار رسالة تنزيل الصورة
+        function showDownloadToast(message) {
+            downloadToast.textContent = message;
+            downloadToast.classList.add('show');
+            
+            // إخفاء الرسالة بعد 3 ثواني
+            setTimeout(() => {
+                downloadToast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // التنقل بين الصور مع تحسينات
+        function navigate(direction) {
+            if (!galleryImages || galleryImages.length === 0) return;
+            
+            currentImageIndex += direction;
+            
+            // التأكد من أن الفهرس يبقى ضمن الحدود
+            if (currentImageIndex >= galleryImages.length) {
+                currentImageIndex = 0;
+            } else if (currentImageIndex < 0) {
+                currentImageIndex = galleryImages.length - 1;
+            }
+            
+            updateModalImage();
+        }
+        
+        // تحديث الصورة في النافذة المنبثقة مع تحسينات
+        function updateModalImage() {
+            if (!galleryImages || galleryImages.length === 0) return;
+            
+            const img = galleryImages[currentImageIndex];
+            const originalSrc = img.dataset.original || img.src;
+            
+            // إضافة تأثير تحميل
+            modalImg.style.opacity = '0';
+            
+            setTimeout(() => {
+                modalImg.src = originalSrc;
+                modalImg.alt = img.alt;
+                modalImg.style.opacity = '1';
+                
+                // تحديث العداد
+                if (imageCounter) {
+                    imageCounter.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
+                }
+            }, 200);
+        }
+        
+        // التعامل مع ضغطات المفاتيح
+        function handleKeyDown(event) {
+            switch (event.key) {
+                case 'Escape':
+                    closeModal();
+                    break;
+                case 'ArrowRight':
+                    navigate(-1); // السهم الأيمن للصورة السابقة (في الوضع RTL)
+                    break;
+                case 'ArrowLeft':
+                    navigate(1); // السهم الأيسر للصورة التالية (في الوضع RTL)
+                    break;
+            }
+        }
+        
+        // إغلاق النافذة عند النقر خارج الصورة
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+        
+        // منع إغلاق النافذة عند النقر داخل الصورة
+        modalImg.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+        
+        // فتح نافذة الألوان المنبثقة
+        function openColorsModal() {
+            const colorsModal = document.getElementById('colorsModal');
+            colorsModal.style.display = 'flex';
+        }
+        
+        // إغلاق نافذة الألوان المنبثقة
+        function closeColorsModal() {
+            document.getElementById('colorsModal').style.display = 'none';
+        }
+        
+        // التحقق من صحة كميات الألوان المختارة
+        function validateColorQuantities() {
+            const yellowQty = parseInt(document.getElementById('yellowQuantity').value) || 0;
+            const blackQty = parseInt(document.getElementById('blackQuantity').value) || 0;
+            const whiteQty = parseInt(document.getElementById('whiteQuantity').value) || 0;
+            
+            // حساب عدد الألوان المختارة (التي لها كمية أكبر من الصفر)
+            let selectedColors = 0;
+            if (yellowQty > 0) selectedColors++;
+            if (blackQty > 0) selectedColors++;
+            if (whiteQty > 0) selectedColors++;
+            
+            // حساب الكمية الإجمالية
+            const totalQty = yellowQty + blackQty + whiteQty;
+            
+            // التحقق من الشروط:
+            // 1. يجب أن يكون هناك قطعتين على الأقل من نفس اللون
+            // أو 2. قطعة واحدة من لونين مختلفين
+            const isValid = (yellowQty >= 2 || blackQty >= 2 || whiteQty >= 2) || 
+                           (selectedColors >= 2 && totalQty >= 2);
+            
+            // إظهار أو إخفاء رسالة الخطأ
+            const errorElement = document.getElementById('colorError');
+            errorElement.style.display = isValid ? 'none' : 'block';
+            
+            return isValid;
+        }
+        
+        // حفظ اختيارات الألوان
+        function saveColors() {
+            // التحقق من صحة الكميات المختارة أولاً
+            if (!validateColorQuantities()) {
+                return; // لا يتم الحفظ إذا لم تتحقق الشروط
+            }
+            
+            const yellowQty = document.getElementById('yellowQuantity').value;
+            const blackQty = document.getElementById('blackQuantity').value;
+            const whiteQty = document.getElementById('whiteQuantity').value;
+            
+            // تحديث الحقول المخفية في النموذج
+            document.getElementById('yellowQty').value = yellowQty;
+            document.getElementById('blackQty').value = blackQty;
+            document.getElementById('whiteQty').value = whiteQty;
+            
+            // حساب الكمية الإجمالية
+            const totalQty = parseInt(yellowQty) + parseInt(blackQty) + parseInt(whiteQty);
+            if (totalQty > 0) {
+                document.getElementById('quantity').value = totalQty;
+            }
+            
+            // إغلاق النافذة المنبثقة
+            closeColorsModal();
+            
+            // إظهار رسالة تأكيد
+            showSaveConfirmation();
+        }
+        
+        // إظهار رسالة تأكيد الحفظ
+        function showSaveConfirmation() {
+            const confirmation = document.getElementById('saveConfirmation');
+            confirmation.style.display = 'block';
+            
+            // إخفاء الرسالة بعد 3 ثواني
+            setTimeout(() => {
+                confirmation.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

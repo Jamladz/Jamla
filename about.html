@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن - Jamla | متجر الجملة للملابس والأحذية</title>
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #FFF8E1;
+            --accent-color: #FFC107;
+            --text-color: #333;
+            --light-text: #777;
+            --bg-color: #FFF;
+            --section-padding: 80px 15px;
+            --border-radius: 12px;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* الهيدر المعدل */
+        .about-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: 100px 0;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            margin-bottom: 50px;
+        }
+        
+        .about-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        
+        .about-header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .about-header h1 {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .about-header p {
+            font-size: 1.3rem;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* أقسام الصفحة المعدلة */
+        .about-section {
+            padding: var(--section-padding);
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            color: var(--primary-color);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 20px auto;
+            border-radius: 2px;
+        }
+        
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 60px;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-text h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .about-text ul {
+            padding-right: 20px;
+        }
+        
+        .about-text li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .about-text li::before {
+            content: '•';
+            color: var(--primary-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-right: -1em;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transition: transform 0.5s;
+        }
+        
+        .about-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* مميزات الشركة المعدلة */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 35px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+        
+        .feature-icon {
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+        
+        .feature-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+        
+        .feature-card p {
+            color: var(--light-text);
+            font-size: 1.05rem;
+        }
+        
+        /* شركاؤنا المعدل */
+        .partners-section {
+            background-color: #f9f9f9;
+        }
+        
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            align-items: center;
+            justify-items: center;
+            margin-top: 40px;
+        }
+        
+        .partner-logo {
+            max-width: 150px;
+            max-height: 80px;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        /* إحصائيات */
+        .stats-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            text-align: center;
+            padding: 70px 15px;
+            clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+            margin: 80px 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .stat-item {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .stat-text {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* دعوة للعمل المعدلة */
+        .cta-section {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            text-align: center;
+            padding: 100px 15px;
+            clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 90%);
+            margin-top: 80px;
+        }
+        
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        
+        .cta-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .cta-btn {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cta-btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .cta-btn-outline:hover {
+            background: white;
+            color: var(--text-color);
+        }
+        
+        /* فوتر */
+        .page-footer {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 40px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .copyright {
+            opacity: 0.7;
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- هيدر الصفحة المعدل -->
+    <header class="about-header" style="background-image: url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center;">
+        <div class="about-header-content container">
+            <h1>من نحن</h1>
+            <p>شركة Jamla - الجسر الذي يربط بين المصنع وبائع التجزئة في عالم الموضة والأزياء، ن��دم حلولاً متكاملة لتجارة الجملة بمعايير عالمية</p>
+        </div>
+    </header>
+
+    <!-- قسم عن الشركة المعدل -->
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">قصتنا</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>تأسست شركة Jamla عام 2025 كشركة ناشئة متخصصة في تجارة الجملة للملابس والأحذية، بهدف إحداث ثورة في سلسلة التوريد بين المصنعين وتجار التجزئة. بدأنا برؤية واضحة لتبسيط عملية التوريد وتوفير منتجات عالية الجودة بأسعار تنافسية.</p>
+                    <p>نحن نؤمن بأن نجاح بائع التجزئة يبدأ باختيار المنتج المناسب بالسعر المناسب، وهذا بالضبط ما نقدمه من خلال منصتنا التي تربطك مباشرة بالمصادر المحلية والدولية، مع ضمان الجودة والموثوقية في كل خطوة.</p>
+                    <p>منذ انطلاقتنا، كنا نعمل على بناء شبكة علاقات قوية مع مصنعين محليين متميزين، بالإضافة إلى شراكات استراتيجية مع موردين موثوقين في تركيا والصين، لنوفر لك تشكيلة متنوعة من المنتجات تلبي جميع الأذواق والاحتياجات.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="فريق Jamla">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم رؤيتنا المعدل -->
+    <section class="about-section" style="background-color: #f9f9f9;">
+        <div class="container">
+            <h2 class="section-title">رؤيتنا ورسالتنا</h2>
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="رؤية Jamla">
+                </div>
+                <div class="about-text">
+                    <h3>رؤيتنا</h3>
+                    <p>أن نكون المنصة الرائدة في مجال تجارة الجملة للملابس والأحذية في المنطقة، من خلال تقديم حلول شاملة تربط بين المصنعين وتجار التجزئة بكل كفاءة وشفافية، وأن نصبح الشريك المفضل لتجار التجزئة في توريد احتياجاتهم من المنتجات.</p>
+                    
+                    <h3>رسالتنا</h3>
+                    <p>تمكين تجار التجزئة من الوصول إلى أفضل المنتجات مباشرة من المصدر، مع توفير الوقت والجهد والوساطات، وذلك من خلال:</p>
+                    <ul>
+                        <li>تشكيلة واسعة ومتنوعة من المنتجات المحلية والدولية</li>
+                        <li>أسعار جملة تنافسية بدون وساطات أو تكاليف خفية</li>
+                        <li>خدمات لوجستية متكاملة وسريعة</li>
+                        <li>دعم فني واستشاري متخصص لمساعدتك في اختيار المنتجات</li>
+                        <li>ضمان الجودة والموثوقية في كل عملية شراء</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- مميزات الشركة المعدلة -->
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">لماذا تختار Jamla؟</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 50px; font-size: 1.1rem; color: var(--light-text);">
+                نقدم مجموعة من المزايا التي تجعلنا الخيار الأمثل لتجار الجملة والتجزئة الذين يبحثون عن الجودة والموثوقية والتميز
+            </p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3 class="feature-title">من المصدر مباشرة</h3>
+                    <p>نوفر لك منتجاتنا مباشرة من المصانع المحلية والموردين الدوليين بدون وساطات أو علامات تجارية أخرى</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h3 class="feature-title">أسعار الجملة الحقيقية</h3>
+                    <p>أسعارنا تنافسية لأننا نتعامل مع المصانع مباشرة ونمرر التوفير لك، مع إمكانية التفاوض على كميات أكبر</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3 class="feature-title">تشكيلة متنوعة</h3>
+                    <p>آلاف المنتجات من الملابس والأحذية بجميع المقاسات والألوان لتختار منها ما يناسب زبائنك</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="feature-title">شبكة توزيع قوية</h3>
+                    <p>نغطي جميع أنحاء البلاد بشبكة توزيع موثوقة وسريعة، مع إمكانية التوصيل خلال 48 ساعة</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="feature-title">جودة مضمونة</h3>
+                    <p>جميع منتجاتنا تخضع لمراقبة الجودة قبل الشحن، مع ضمان استبدال أو إرجاع المنتجات المعيبة</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="feature-title">دعم فني متكامل</h3>
+                    <p>فريق دعم فني على مدار الساعة لمساعدتك في أي استفسار، مع إمكانية الاستشارة في اختيار المنتجات</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- إحصائيات الشركة الجديدة -->
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">أرقامنا تتحدث عنا</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">+500</div>
+                    <div class="stat-text">تاجر جملة مسجل</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">+20</div>
+                    <div class="stat-text">مصنع محلي شريك</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10K</div>
+                    <div class="stat-text">منتج متوفر</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">58</div>
+                    <div class="stat-text">ولاية نغطيها</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- شركاؤنا المعدل -->
+    <section class="about-section partners-section">
+        <div class="container">
+            <h2 class="section-title">شركاؤنا</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 50px; font-size: 1.1rem; color: var(--light-text);">
+                نتعاون مع شبكة من المصانع والموردين الموثوقين لضمان جودة منتجاتنا وتنوعها
+            </p>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <p>نفخر في Jamla بشراكاتنا الاستراتيجية مع:</p>
+                    <ul>
+                        <li><strong>المصنعون المحليون:</strong> تعاون مع أكثر من 20 مصنعاً محلياً لإنتاج الملابس والأحذية بجودة عالية وفقاً للمعايير الدولية</li>
+                        <li><strong>الموردون الأتراك:</strong> شراكات حصرية مع كبرى مصانع الملابس في إسطنبول وطرابزون، مع إمكانية التصنيع حسب الطلب</li>
+                        <li><strong>الموردون الصينيون:</strong> علاقات مباشرة مع مصانع في جوانغتشو وييوو، مع فرق مراقبة جودة في الموقع</li>
+                        <li><strong>شركات الشحن:</strong> تعاون مع أفضل شركات الشحن المحلية والدولية لضمان وصول المنتجات في الوقت المحدد</li>
+                    </ul>
+                    <p>هذه الشراكات تمكننا من تقديم أفضل المنتجات بأفضل الأسعار لتجار التجزئة، مع الحفاظ على الجودة والموثوقية.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="شركاء Jamla">
+                </div>
+            </div>
+            
+            <div class="partners-grid">
+                <img src="https://via.placeholder.com/150x80?text=Local+Factory" alt="مصنع محلي" class="partner-logo">
+                <img src="https://via.placeholder.com/150x80?text=Turkish+Supplier" alt="مورد تركي" class="partner-logo">
+                <img src="https://via.placeholder.com/150x80?text=China+Factory" alt="مصنع صيني" class="partner-logo">
+                <img src="https://via.placeholder.com/150x80?text=Shipping+Co" alt="شركة شحن" class="partner-logo">
+                <img src="https://via.placeholder.com/150x80?text=Textile+Co" alt="شركة نسيج" class="partner-logo">
+            </div>
+        </div>
+    </section>
+
+    <!-- دعوة للعمل المعدلة -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2 class="cta-title">ابدأ رحلتك مع Jamla اليوم</h2>
+            <p class="cta-subtitle">
+                سجل الآن كتاجر جملة وتمتع بجميع مزايا الجملة الحقيقية من المصدر مباشرة إلى متجرك، مع شروط تمويلية مرنة وخدمات لوجستية متكاملة.
+            </p>
+            <div class="cta-buttons">
+                <button class="cta-btn">سجل كتاجر جملة</button>
+                <button class="cta-btn cta-btn-outline">طلب استشارة</button>
+                <button class="cta-btn cta-btn-outline">اتصل بنا</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- فوتر الصفحة -->
+    <footer class="page-footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="index.html" class="footer-link">الصفحة الرئيسية</a>
+                <a href="about.html" class="footer-link">من نحن</a>
+                <a href="products.html" class="footer-link">المنتجات</a>
+                <a href="contact.html" class="footer-link">اتصل بنا</a>
+                <a href="terms.html" class="footer-link">الشروط والأحكام</a>
+                <a href="privacy.html" class="footer-link">سياسة الخصوصية</a>
+            </div>
+            <p class="copyright">© 2025 Jamla. جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+</body>
+</html>

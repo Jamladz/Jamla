@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سياسة الخصوصية - Jamla</title>
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #FFF8E1;
+            --text-color: #333;
+            --light-text: #777;
+            --bg-color: #FFF;
+            --warning-color: #e74c3c;
+            --section-spacing: 60px;
+            --border-radius: 12px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .privacy-header {
+            background: linear-gradient(135deg, var(--primary-color), #FFC107);
+            padding: 80px 20px;
+            text-align: center;
+            color: white;
+            margin-bottom: var(--section-spacing);
+            border-bottom: 5px solid var(--warning-color);
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .privacy-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+        
+        .privacy-header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .privacy-header h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .privacy-header p {
+            font-size: 1.2rem;
+            margin-top: 15px;
+        }
+        
+        .privacy-content {
+            padding: 20px 0;
+        }
+        
+        .section {
+            margin-bottom: var(--section-spacing);
+            scroll-margin-top: 30px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--primary-color);
+            margin-top: 15px;
+            border-radius: 2px;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-top: 35px;
+            margin-bottom: 15px;
+        }
+        
+        p, li {
+            font-size: 1.15rem;
+            color: var(--text-color);
+        }
+        
+        ul {
+            padding-right: 25px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        li::before {
+            content: '•';
+            color: var(--primary-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-right: -1em;
+        }
+        
+        .warning-box {
+            background-color: #fdecea;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin: 40px 0;
+            border-left: 5px solid var(--warning-color);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .warning-box h3 {
+            color: var(--warning-color);
+            margin-top: 0;
+            font-size: 1.6rem;
+        }
+        
+        .highlight {
+            background-color: var(--secondary-color);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin: 30px 0;
+            border-right: 5px solid var(--primary-color);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .contact-info {
+            margin-top: 60px;
+            background-color: #f9f9f9;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 30px 20px;
+            color: var(--light-text);
+            font-size: 1rem;
+            border-top: 1px solid #eee;
+            background-color: #f8f8f8;
+        }
+        
+        .legal-notice {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin: 50px 0;
+            border: 2px dashed var(--warning-color);
+            box-shadow: var(--box-shadow);
+            position: relative;
+        }
+        
+        .legal-notice h2 {
+            color: var(--warning-color);
+        }
+        
+        .legal-icon {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            background-color: var(--warning-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .back-to-top {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .privacy-header {
+                padding: 60px 20px;
+            }
+            
+            .privacy-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- هيدر الصفحة المطور -->
+    <header class="privacy-header">
+        <div class="privacy-header-content">
+            <h1>سياسة الخصوصية</h1>
+            <p>حماية بياناتك وعلامتنا التجارية هي أولويتنا الأولى</p>
+            <p>آخر تحديث: 1 جانفي 2025</p>
+        </div>
+    </header>
+
+    <!-- محتوى السياسة المطور -->
+    <div class="container">
+        <div class="privacy-content">
+            <div class="section" id="introduction">
+                <p>في <strong>Jamla</strong>، نعتبر خصوصيتكم وحماية بياناتكم الشخصية من أهم أولوياتنا. تم تصميم هذه السياسة لتوضيح ممارساتنا في جمع واستخدام المعلومات وفقًا لأعلى المعايير الأمنية والقانونية.</p>
+                
+                <div class="highlight">
+                    <p><i class="fas fa-exclamation-circle" style="color: var(--primary-color); margin-left: 5px;"></i> <strong>ملاحظة هامة:</strong> باستخدامك منصة Jamla أو أي من خدماتنا، فإنك توافق على الشروط والأحكام المذكورة في هذه السياسة. إذا كنت لا توافق على أي بند من هذه السياسة، يرجى الامتناع عن استخدام خدماتنا.</p>
+                </div>
+            </div>
+
+            <div class="section" id="data-collection">
+                <h2><i class="fas fa-database" style="margin-left: 10px;"></i> المعلومات التي نجمعها</h2>
+                <p>في إطار التزامنا بالشفافية، نوضح أننا <strong>لا نجمع أي بيانات شخصية</strong> إلا تلك الضرورية لإتمام عملية الطلب فقط، وتشمل:</p>
+                <ul>
+                    <li><strong>الاسم الكامل:</strong> لأغراض التسليم والتوثيق</li>
+                    <li><strong>رقم الهاتف:</strong> للتواصل بخصوص الطلب وتحديثات الشحن</li>
+                    <li><strong>الولاية والبلدية:</strong> لتحديد موقع التوصيل بدقة</li>
+                    <li><strong>نوع المنتج المطلوب:</strong> لتنفيذ الطلب بدقة</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <h3><i class="fas fa-shield-alt" style="margin-left: 5px;"></i> ضمانات أمنية إضافية</h3>
+                    <p>نؤكد أننا <strong>لا نطلب ولا نخزن</strong> أي معلومات دفع أو بيانات مالية، حيث أن نظامنا يعتمد حصريًا على:</p>
+                    <ul>
+                        <li>الدفع عند الاستلام فقط</li>
+                        <li>التأكد من جودة المنتج قبل الدفع</li>
+                        <li>عدم تخزين أي معلومات مالية بأي شكل من الأشكال</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section" id="data-usage">
+                <h2><i class="fas fa-cogs" style="margin-left: 10px;"></i> كيفية استخدام معلوماتك</h2>
+                <p>تستخدم البيانات التي تقدمها <strong>لأغراض محدودة وضرورية فقط</strong>، وتشمل:</p>
+                <ul>
+                    <li><strong>تنفيذ طلب الشراء:</strong> معالجة الطلب وإعداده للتسليم</li>
+                    <li><strong>التواصل مع العميل:</strong> لتأكيد الطلب وتحديثات الشحن</li>
+                    <li><strong>ترتيب عملية التوصيل:</strong> تنسيق مع شركات الشحن الموثوقة</li>
+                    <li><strong>تحسين الخدمة:</strong> تحليل غير شخصي لتحسين تجربة المستخدم</li>
+                </ul>
+            </div>
+
+            <div class="section" id="data-protection">
+                <h2><i class="fas fa-lock" style="margin-left: 10px;"></i> حماية البيانات</h2>
+                <p>نلتزم بأعلى معايير حماية البيانات من خلال:</p>
+                <ul>
+                    <li><strong>مشاركة محدودة:</strong> لا تشارك البيانات إلا مع شركات الشحن للضرورة القصوى</li>
+                    <li><strong>عدم تخزين البيانات الحساسة:</strong> لا نحتفظ بأي معلومات دفع أو مالية</li>
+                    <li><strong>إجراءات أمنية صارمة:</strong> نستخدم تقنيات متقدمة لمنع الوصول غير المصرح به</li>
+                    <li><strong>فترة الاحتفاظ المحدودة:</strong> تحذف البيانات بعد انتهاء الغرض منها</li>
+                    <li><strong>تدريب الموظفين:</strong> جميع العاملين ملتزمون بسياسات الخصوصية</li>
+                </ul>
+            </div>
+
+            <div class="section" id="fraud-prevention">
+                <h2><i class="fas fa-user-shield" style="margin-left: 10px;"></i> سياسة منع الاحتيال</h2>
+                <p>لدينا نظام متكامل للكشف عن ومنع الطلبات المظللة:</p>
+                <ul>
+                    <li><strong>مراجعة يدوية:</strong> جمي�� الطلبات تخضع لمراجعة الجودة</li>
+                    <li><strong>تحليل الأنماط:</strong> نظام ذكي للكشف عن السلوك المشبوه</li>
+                    <li><strong>حق الرفض:</strong> نحتفظ بالحق في رفض أي طلب دون إبداء أسباب</li>
+                    <li><strong>التعاون مع السلطات:</strong> نبلغ الجهات المختصة عن أي محاولات احتيال</li>
+                    <li><strong>القوائم السوداء:</strong> حظر العملاء الذين يثبت تورطهم في أنشطة مشبوهة</li>
+                </ul>
+            </div>
+
+            <div class="legal-notice" id="trademark-protection">
+                <div class="legal-icon">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <h2><i class="fas fa-trademark" style="margin-left: 10px;"></i> حماية العلامة التجارية</h2>
+                <p>إن <strong>اسم Jamla وشعارها وعلامتها التجارية</strong> مسجلون قانونيًا في الجزائر والدول المجاورة ومحميون بموجب:</p>
+                <ul>
+                    <li>قانون العلامات التجارية الجزائري</li>
+                    <li>اتفاقيات الملكية الفكرية الدولية</li>
+                    <li>القوانين التجارية المعمول بها</li>
+                </ul>
+                
+                <h3>تحذير قانوني صارم:</h3>
+                <p>يمنع منعًا باتًا:</p>
+                <ul>
+                    <li>انتحال شخصية Jamla أو الادعاء بالانتماء إليها</li>
+                    <li>استخدام الاسم أو الشعار أو أي عناصر مميزة دون ترخيص كتابي</li>
+                    <li>التشهير بالعلامة التجارية أو استغلال سمعتها</li>
+                    <li>أي محاولة للتضليل أو الخداع باستخدام العلامة التجارية</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <h3><i class="fas fa-exclamation-triangle" style="margin-left: 5px;"></i> عقوبات الانتهاك:</h3>
+                    <p>أي انتهاك للعلامة التجارية لـ Jamla سيتعرض لـ:</p>
+                    <ul>
+                        <li>إجراءات قانونية فورية</li>
+                        <li>مطالبات بالتعويضات المادية والمعنوية</li>
+                        <li>حذف المحتوى المخالف فورًا</li>
+                        <li>متابعات قضائية وفقًا لأقصى العقوبات القانونية</li>
+                    </ul>
+                    <p>لترخيص استخدام العلامة التجارية، يرجى التواصل مع قسم الشؤون القانونية عبر البريد الإلكتروني الرسمي.</p>
+                </div>
+            </div>
+
+            <div class="section" id="policy-changes">
+                <h2><i class="fas fa-sync-alt" style="margin-left: 10px;"></i> التعديلات على السياسة</h2>
+                <p>نحتفظ بالحق في تحديث هذه السياسة لمواكبة:</p>
+                <ul>
+                    <li>التغييرات القانونية والتنظيمية</li>
+                    <li>تطورات أنظمتنا التقنية</li>
+                    <li>أفضل الممارسات الأمنية</li>
+                </ul>
+                <p>سيتم نشر أي تحديثات على هذه الصفحة مع تحديث تاريخ التعديل. ننصح بمراجعة السياسة دوريًا.</p>
+            </div>
+
+            <div class="contact-info" id="contact">
+                <h2><i class="fas fa-envelope" style="margin-left: 10px;"></i> التواصل معنا</h2>
+                <p>لأي استفسارات بخصوص سياسة الخصوصية أو العلامة التجارية:</p>
+                <ul>
+                    <li><strong><i class="fas fa-envelope" style="margin-left: 5px;"></i> البريد الإلكتروني:</strong> legal@jamla.dz</li>
+                    <li><strong><i class="fas fa-phone" style="margin-left: 5px;"></i> الهاتف:</strong> 123456789+</li>
+                    <li><strong><i class="fas fa-map-marker-alt" style="margin-left: 5px;"></i> العنوان:</strong> شارع التجارة، الجزائر العاصمة، الجزائر</li>
+                    <li><strong><i class="fas fa-clock" style="margin-left: 5px;"></i> ساعات العمل:</strong> من الأحد إلى الخميس، 9 صباحًا إلى 5 مساءً</li>
+                </ul>
+            </div>
+
+            <a href="#" class="back-to-top"><i class="fas fa-arrow-up" style="margin-left: 5px;"></i> العودة إلى الأعلى</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p><strong>© 2025 Jamla. جميع الحقوق محفوظة.</strong></p>
+            <p>العلامة التجارية مسجلة لدى المعهد الوطني الجزائري للملكية الصناعية برقم 123456</p>
+            <p>أي انتهاك سيتم متابعته قانونيًا وفقًا لأحكام القانون الجزائري والعقوبات الدولية</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
