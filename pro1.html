@@ -16,6 +16,8 @@
             --bg-color: #FFF;
             --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --glass-effect: rgba(255, 255, 255, 0.2);
+            --error-color: #f44336;
+            --success-color: #4CAF50;
         }
         
         body {
@@ -24,6 +26,7 @@
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
+            line-height: 1.6;
         }
         
         .container {
@@ -376,6 +379,27 @@
             text-align: center;
         }
         
+        /* رسائل التأكيد المضافة */
+        .success-message {
+            background-color: var(--success-color);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+        }
+        
+        .error-message-global {
+            background-color: var(--error-color);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+        }
+        
         .form-group {
             margin-bottom: 15px;
         }
@@ -440,6 +464,7 @@
             margin-top: 10px;
             cursor: pointer;
             transition: background-color 0.3s;
+            position: relative;
         }
         
         .submit-btn:hover {
@@ -449,6 +474,26 @@
         .submit-btn:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
+        }
+        
+        /* رسالة التحميل */
+        .submit-loading {
+            position: relative;
+            pointer-events: none;
+        }
+        
+        .submit-loading::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
         }
         
         /* تنبيه الطلب */
@@ -554,6 +599,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             z-index: 100;
             transition: transform 0.3s;
+            display: none;
         }
         
         .back-to-top:hover {
@@ -562,7 +608,7 @@
         
         /* رسالة الخطأ */
         .error-message {
-            color: red;
+            color: var(--error-color);
             font-size: 12px;
             margin-top: 5px;
             display: none;
@@ -719,6 +765,39 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            .product-gallery img {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .product-video {
+                height: 200px;
+            }
+            
+            .contact-methods {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .contact-method {
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .contact-icon {
+                margin-bottom: 0;
+                width: 50px;
+                height: 50px;
+            }
+            
+            .contact-text {
+                font-size: 16px;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -887,6 +966,15 @@
             <div class="order-form">
                 <h3>نموذج طلب المنتج</h3>
                 
+                <!-- رسائل التأكيد المضافة -->
+                <div id="successMessage" class="success-message">
+                    تم إرسال طلبك بنجاح! سيتم التواصل معك قريباً.
+                </div>
+                
+                <div id="errorMessage" class="error-message-global">
+                    حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.
+                </div>
+                
                 <form id="productOrderForm">
                     <input type="hidden" id="productName" value="بليغة رجال اديلات">
                     
@@ -978,8 +1066,10 @@
                     </div>
                     
                     <button type="submit" class="submit-btn" id="submitBtn">
-                        <i class="fas fa-spinner loading-spinner" id="loadingSpinner"></i>
-                        إرسال الطلب
+                        <span id="submitText">إرسال الطلب</span>
+                        <span id="submitLoader" style="display:none;">
+                            <i class="fas fa-spinner fa-spin"></i> جاري الإرسال...
+                        </span>
                     </button>
                 </form>
             </div>
@@ -1102,47 +1192,90 @@
                 });
             });
             
-            // إرسال نموذج الطلب إلى جوجل شيت
-            const orderForm = document.getElementById('productOrderForm');
-            const submitBtn = document.getElementById('submitBtn');
-            const loadingSpinner = document.getElementById('loadingSpinner');
+            // دالة مساعدة لعرض رسالة النجاح
+            function showSuccessMessage(details) {
+                $('#successMessage').fadeIn().html(`
+                    تم إرسال طلبك بنجاح!<br><br>
+                    التفاصيل:<br>
+                    - المنتج: ${details.productName}<br>
+                    - الكمية: ${details.quantity}<br>
+                    - الاسم: ${details.fullName}<br>
+                    - الهاتف: ${details.phone}<br>
+                    - العنوان: ${details.wilaya}, ${details.commune}<br><br>
+                    سيتم التواصل معك خلال 24 ساعة.
+                `);
+                
+                setTimeout(() => {
+                    $('#successMessage').fadeOut();
+                }, 10000);
+            }
             
-            orderForm.addEventListener('submit', async function(e) {
+            // دالة مساعدة لعرض رسالة الخطأ
+            function showErrorMessage(message) {
+                $('#errorMessage').fadeIn().text(message || 'حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
+                
+                setTimeout(() => {
+                    $('#errorMessage').fadeOut();
+                }, 5000);
+            }
+            
+            // دالة التحقق من صحة النموذج
+            function validateForm() {
+                let isValid = true;
+                
+                // التحقق من صحة الكمية
+                const quantity = parseInt($('#quantity').val());
+                if (quantity < 5) {
+                    $('#quantityError').show();
+                    isValid = false;
+                } else {
+                    $('#quantityError').hide();
+                }
+                
+                // التحقق من الحقول المطلوبة
+                $('[required]').each(function() {
+                    if (!$(this).val()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                return isValid;
+            }
+            
+            // إرسال النموذج إلى Google Sheets
+            $('#productOrderForm').on('submit', async function(e) {
                 e.preventDefault();
                 
-                // التحقق من صحة الكمية قبل الإرسال
-                const quantity = parseInt(document.getElementById('quantity').value);
-                if (quantity < 5) {
-                    document.getElementById('quantityError').style.display = 'block';
-                    document.getElementById('quantity').focus();
+                // التحقق من صحة النموذج
+                if (!validateForm()) {
+                    showErrorMessage('الرجاء ملء جميع الحقول المطلوبة بشكل صحيح');
                     return;
                 }
                 
-                // جمع بيانات النموذج
-                const formData = {
-                    productName: document.getElementById('productName').value,
-                    quantity: quantity,
-                    colorNotes: document.getElementById('colorNotes').value,
-                    fullName: document.getElementById('fullName').value,
-                    phone: document.getElementById('phone').value,
-                    wilaya: document.getElementById('wilaya').value,
-                    commune: document.getElementById('commune').value,
-                    status: 'ماريبونداش',
-                    timestamp: new Date().toLocaleString('ar-DZ'),
-                    sheetName: 'sheet1' // إضافة اسم الورقة
-                };
-                
-                // رابط جوجل شيت المعدل
-                const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbw83uMn45Jz18FHOS7Oa9A15Ri-7YPerisll3JgOANYS0Xqa467c0Wlujh02JxvZ9_N/exec';
+                // إعداد واجهة المستخدم أثناء الإرسال
+                $('#submitText').hide();
+                $('#submitLoader').show();
+                $('#submitBtn').prop('disabled', true).addClass('submit-loading');
                 
                 try {
-                    // تعطيل زر الإرسال وإظهار مؤشر التحميل
-                    submitBtn.disabled = true;
-                    loadingSpinner.style.display = 'inline-block';
-                    submitBtn.innerHTML = '<i class="fas fa-spinner loading-spinner" id="loadingSpinner" style="display: inline-block;"></i> جاري الإرسال...';
+                    // جمع بيانات النموذج
+                    const formData = {
+                        productName: $('#productName').val(),
+                        quantity: $('#quantity').val(),
+                        colorNotes: $('#colorNotes').val(),
+                        fullName: $('#fullName').val(),
+                        phone: $('#phone').val(),
+                        wilaya: $('#wilaya').val(),
+                        commune: $('#commune').val(),
+                        timestamp: new Date().toISOString(),
+                        sheetName: 'sheet1'
+                    };
                     
-                    // إرسال البيانات إلى جوجل شيت
-                    const response = await fetch(googleScriptUrl, {
+                    // إرسال البيانات إلى Google Sheets
+                    const response = await fetch('https://script.google.com/macros/s/AKfycbw83uMn45Jz18FHOS7Oa9A15Ri-7YPerisll3JgOANYS0Xqa467c0Wlujh02JxvZ9_N/exec', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1150,78 +1283,48 @@
                         body: JSON.stringify(formData)
                     });
                     
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    
+                    // معالجة الاستجابة
                     const result = await response.json();
                     
                     if (result.status === 'success') {
-                        // رسالة نجاح
-                        const orderDetails = `
-                            تم استلام طلبك بنجاح!
-                            رقم الطلب: ${result.orderId}
-                            التفاصيل:
-                            - المنتج: ${formData.productName}
-                            - الكمية الإجمالية: ${formData.quantity}
-                            - ملاحظات الألوان: ${formData.colorNotes || 'لا توجد ملاحظات'}
-                            - الاسم: ${formData.fullName}
-                            - الهاتف: ${formData.phone}
-                            - الولاية: ${formData.wilaya}
-                            - البلدية: ${formData.commune}
-                            
-                            سيتم التواصل معك خلال 24 ساعة لتأكيد الطلب.
-                            الدفع عند الاستلام بعد التأكد من جودة المنتج.
-                        `;
+                        // عرض رسالة النجاح
+                        showSuccessMessage(formData);
                         
-                        // عرض رسالة النجاح باستخدام SweetAlert2
-                        Swal.fire({
-                            title: 'تم إرسال الطلب بنجاح!',
-                            html: orderDetails.replace(/\n/g, '<br>'),
-                            icon: 'success',
-                            confirmButtonText: 'حسناً',
-                            confirmButtonColor: '#FFD700'
-                        });
+                        // إعادة تعيين النموذج
+                        $('#productOrderForm')[0].reset();
+                        $('#quantity').val(5);
                         
-                        // إعادة تعيين النموذج بعد الإرسال
-                        orderForm.reset();
-                        document.getElementById('quantity').value = 5;
-                        document.getElementById('quantityError').style.display = 'none';
-                        
-                        // إرسال رسالة واتساب تلقائية (اختياري)
+                        // إرسال رسالة واتساب (اختياري)
                         const whatsappMessage = `مرحباً، أنا مهتم بشراء المنتج التالي:
                         
 المنتج: ${formData.productName}
-الكمية الإجمالية: ${formData.quantity}
-ملاحظات الألوان: ${formData.colorNotes || 'لا توجد ملاحظات'}
+الكمية: ${formData.quantity}
 الاسم: ${formData.fullName}
 الهاتف: ${formData.phone}
-الولاية: ${formData.wilaya}
-البلدية: ${formData.commune}
+العنوان: ${formData.wilaya}, ${formData.commune}
 
-الرجاء التواصل معي لتأكيد الطلب.`;
+ملاحظات: ${formData.colorNotes || 'لا توجد ملاحظات'}`;
                         
                         const whatsappUrl = `https://wa.me/213555840120?text=${encodeURIComponent(whatsappMessage)}`;
-                        // window.open(whatsappUrl, '_blank'); // يمكن فتح هذه السطر إذا أردت فتح الواتساب تلقائياً
+                        // window.open(whatsappUrl, '_blank'); // يمكن تفعيل هذا السطر إذا أردت
                     } else {
-                        throw new Error(result.message || 'حدث خطأ غير معروف');
+                        throw new Error(result.message || 'حدث خطأ غير متوقع');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    
-                    // عرض رسالة الخطأ باستخدام SweetAlert2
-                    Swal.fire({
-                        title: 'حدث خطأ!',
-                        text: 'حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى أو التواصل معنا عبر الواتساب.',
-                        icon: 'error',
-                        confirmButtonText: 'حسناً',
-                        confirmButtonColor: '#FFD700'
-                    });
+                    showErrorMessage(error.message);
                 } finally {
-                    // إعادة تمكين زر الإرسال وإخفاء مؤشر التحميل
-                    submitBtn.disabled = false;
-                    loadingSpinner.style.display = 'none';
-                    submitBtn.innerHTML = 'إرسال الطلب';
+                    // إعادة واجهة المستخدم إلى وضعها الطبيعي
+                    $('#submitText').show();
+                    $('#submitLoader').hide();
+                    $('#submitBtn').prop('disabled', false).removeClass('submit-loading');
+                }
+            });
+            
+            // إضافة تحقق فوري للحقول المطلوبة
+            $('[required]').on('input', function() {
+                if ($(this).val()) {
+                    $(this).removeClass('is-invalid');
                 }
             });
         });
