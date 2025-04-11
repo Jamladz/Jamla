@@ -446,6 +446,11 @@
             background-color: var(--accent-color);
         }
         
+        .submit-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
         /* تنبيه الطلب */
         .order-alert {
             background-color: #f8f9fa;
@@ -683,9 +688,43 @@
             font-family: 'Tajawal', sans-serif;
             min-height: 80px;
         }
+        
+        /* شريط تنبيه الواتساب */
+        .whatsapp-alert {
+            background-color: #25D366;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .whatsapp-alert i {
+            font-size: 20px;
+        }
+        
+        .whatsapp-alert span {
+            font-size: 14px;
+        }
+        
+        /* رسالة التحميل */
+        .loading-spinner {
+            display: none;
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="container">
@@ -938,7 +977,10 @@
                         <input type="text" class="form-control" id="commune" placeholder="أدخل اسم البلدية" required>
                     </div>
                     
-                    <button type="submit" class="submit-btn">إرسال الطلب</button>
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-spinner loading-spinner" id="loadingSpinner"></i>
+                        إرسال الطلب
+                    </button>
                 </form>
             </div>
         </div>
@@ -1062,8 +1104,10 @@
             
             // إرسال نموذج الطلب إلى جوجل شيت
             const orderForm = document.getElementById('productOrderForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
             
-            orderForm.addEventListener('submit', function(e) {
+            orderForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 // التحقق من صحة الكمية قبل الإرسال
@@ -1075,77 +1119,110 @@
                 }
                 
                 // جمع بيانات النموذج
-                const productName = document.getElementById('productName').value;
-                const fullName = document.getElementById('fullName').value;
-                const phone = document.getElementById('phone').value;
-                const wilaya = document.getElementById('wilaya').value;
-                const commune = document.getElementById('commune').value;
-                const colorNotes = document.getElementById('colorNotes').value;
+                const formData = {
+                    productName: document.getElementById('productName').value,
+                    quantity: quantity,
+                    colorNotes: document.getElementById('colorNotes').value,
+                    fullName: document.getElementById('fullName').value,
+                    phone: document.getElementById('phone').value,
+                    wilaya: document.getElementById('wilaya').value,
+                    commune: document.getElementById('commune').value,
+                    status: 'ماريبونداش',
+                    timestamp: new Date().toLocaleString('ar-DZ'),
+                    sheetName: 'sheet1' // إضافة اسم الورقة
+                };
                 
-                // رابط جوجل شيت (استبدل هذا برابط النموذج الخاص بك)
-                const googleFormUrl = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse';
+                // رابط جوجل شيت المعدل
+                const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbw83uMn45Jz18FHOS7Oa9A15Ri-7YPerisll3JgOANYS0Xqa467c0Wlujh02JxvZ9_N/exec';
                 
-                // إعداد البيانات للإرسال
-                const formData = new FormData();
-                formData.append('entry.123456789', productName); // استبدل بأرقام حقول جوجل شيت
-                formData.append('entry.987654321', quantity);
-                formData.append('entry.111111111', fullName);
-                formData.append('entry.222222222', phone);
-                formData.append('entry.333333333', wilaya);
-                formData.append('entry.444444444', commune);
-                formData.append('entry.555555555', colorNotes); // ملاحظات الألوان
-                
-                // إرسال البيانات إلى جوجل شيت
-                fetch(googleFormUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: formData
-                })
-                .then(() => {
-                    // رسالة نجاح
-                    const orderDetails = `
-                        تم استلام طلبك بنجاح!
-                        التفاصيل:
-                        - المنتج: ${productName}
-                        - الكمية الإجمالية: ${quantity}
-                        - ملاحظات الألوان: ${colorNotes || 'لا توجد ملاحظات'}
-                        - الاسم: ${fullName}
-                        - الهاتف: ${phone}
-                        - الولاية: ${wilaya}
-                        - البلدية: ${commune}
+                try {
+                    // تعطيل زر الإرسال وإظهار مؤشر التحميل
+                    submitBtn.disabled = true;
+                    loadingSpinner.style.display = 'inline-block';
+                    submitBtn.innerHTML = '<i class="fas fa-spinner loading-spinner" id="loadingSpinner" style="display: inline-block;"></i> جاري الإرسال...';
+                    
+                    // إرسال البيانات إلى جوجل شيت
+                    const response = await fetch(googleScriptUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        // رسالة نجاح
+                        const orderDetails = `
+                            تم استلام طلبك بنجاح!
+                            رقم الطلب: ${result.orderId}
+                            التفاصيل:
+                            - المنتج: ${formData.productName}
+                            - الكمية الإجمالية: ${formData.quantity}
+                            - ملاحظات الألوان: ${formData.colorNotes || 'لا توجد ملاحظات'}
+                            - الاسم: ${formData.fullName}
+                            - الهاتف: ${formData.phone}
+                            - الولاية: ${formData.wilaya}
+                            - البلدية: ${formData.commune}
+                            
+                            سيتم التواصل معك خلال 24 ساعة لتأكيد الطلب.
+                            الدفع عند الاستلام بعد التأكد من جودة المنتج.
+                        `;
                         
-                        سيتم التواصل معك خلال 24 ساعة لتأكيد الطلب.
-                        الدفع عند الاستلام بعد التأكد من جودة المنتج.
-                    `;
-                    
-                    alert(orderDetails);
-                    
-                    // إعادة تعيين النموذج بعد الإرسال
-                    orderForm.reset();
-                    $('#wilaya').val(null).trigger('change');
-                    $('#quantity').val(5); // إعادة تعيين الكمية إلى 5
-                    document.getElementById('quantityError').style.display = 'none';
-                    
-                    // إرسال رسالة واتساب تلقائية (اختياري)
-                    const whatsappMessage = `مرحباً، أنا مهتم بشراء المنتج التالي:
-                    
-المنتج: ${productName}
-الكمية الإجمالية: ${quantity}
-ملاحظات الألوان: ${colorNotes || 'لا توجد ملاحظات'}
-الاسم: ${fullName}
-الهاتف: ${phone}
-الولاية: ${wilaya}
-البلدية: ${commune}
+                        // عرض رسالة النجاح باستخدام SweetAlert2
+                        Swal.fire({
+                            title: 'تم إرسال الطلب بنجاح!',
+                            html: orderDetails.replace(/\n/g, '<br>'),
+                            icon: 'success',
+                            confirmButtonText: 'حسناً',
+                            confirmButtonColor: '#FFD700'
+                        });
+                        
+                        // إعادة تعيين النموذج بعد الإرسال
+                        orderForm.reset();
+                        document.getElementById('quantity').value = 5;
+                        document.getElementById('quantityError').style.display = 'none';
+                        
+                        // إرسال رسالة واتساب تلقائية (اختياري)
+                        const whatsappMessage = `مرحباً، أنا مهتم بشراء المنتج التالي:
+                        
+المنتج: ${formData.productName}
+الكمية الإجمالية: ${formData.quantity}
+ملاحظات الألوان: ${formData.colorNotes || 'لا توجد ملاحظات'}
+الاسم: ${formData.fullName}
+الهاتف: ${formData.phone}
+الولاية: ${formData.wilaya}
+البلدية: ${formData.commune}
 
 الرجاء التواصل معي لتأكيد الطلب.`;
-                    
-                    const whatsappUrl = `https://wa.me/213772370858?text=${encodeURIComponent(whatsappMessage)}`;
-                    // window.open(whatsappUrl, '_blank'); // يمكن فتح هذه السطر إذا أردت فتح الواتساب تلقائياً
-                })
-                .catch(error => {
+                        
+                        const whatsappUrl = `https://wa.me/213555840120?text=${encodeURIComponent(whatsappMessage)}`;
+                        // window.open(whatsappUrl, '_blank'); // يمكن فتح هذه السطر إذا أردت فتح الواتساب تلقائياً
+                    } else {
+                        throw new Error(result.message || 'حدث خطأ غير معروف');
+                    }
+                } catch (error) {
                     console.error('Error:', error);
-                    alert('حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى أو التواصل معنا عبر الواتساب.');
-                });
+                    
+                    // عرض رسالة الخطأ باستخدام SweetAlert2
+                    Swal.fire({
+                        title: 'حدث خطأ!',
+                        text: 'حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى أو التواصل معنا عبر الواتساب.',
+                        icon: 'error',
+                        confirmButtonText: 'حسناً',
+                        confirmButtonColor: '#FFD700'
+                    });
+                } finally {
+                    // إعادة تمكين زر الإرسال وإخفاء مؤشر التحميل
+                    submitBtn.disabled = false;
+                    loadingSpinner.style.display = 'none';
+                    submitBtn.innerHTML = 'إرسال الطلب';
+                }
             });
         });
         
