@@ -1162,7 +1162,7 @@
                         wilaya: $('#wilaya').val(),
                         commune: $('#commune').val(),
                         sheetName: 'طلبات',
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toLocaleString('ar-DZ') // تاريخ ووقت محلي
                     };
                     
                     // إرسال البيانات إلى Google Sheets
@@ -1174,20 +1174,24 @@
                         body: new URLSearchParams(formData).toString()
                     });
                     
-                    // معالجة الاستجابة
-                    const result = await response.json();
+                    // معالجة الاستجابة كنص أولاً
+                    const responseText = await response.text();
                     
-                    if (result.status === 'success') {
-                        // عرض رسالة النجاح
-                        showSuccessMessage(formData);
+                    try {
+                        // محاولة تحليل النص كـ JSON
+                        const result = JSON.parse(responseText);
                         
-                        // إعادة تعيين النموذج
-                        $('#productOrderForm')[0].reset();
-                        $('#quantity').val(5);
-                        
-                        // إرسال رسالة واتساب
-                        const whatsappMessage = `مرحباً، أنا مهتم بشراء المنتج التالي:
-                        
+                        if (result.status === 'success') {
+                            // عرض رسالة النجاح
+                            showSuccessMessage(formData);
+                            
+                            // إعادة تعيين النموذج
+                            $('#productOrderForm')[0].reset();
+                            $('#quantity').val(5);
+                            
+                            // إرسال رسالة واتساب
+                            const whatsappMessage = `مرحباً، أنا مهتم بشراء المنتج التالي:
+                            
 المنتج: ${formData.productName}
 الكمية: ${formData.quantity}
 الاسم: ${formData.fullName}
@@ -1195,11 +1199,21 @@
 العنوان: ${formData.wilaya}, ${formData.commune}
 
 ملاحظات: ${formData.colorNotes || 'لا توجد ملاحظات'}`;
-                        
-                        const whatsappUrl = `https://wa.me/213555840120?text=${encodeURIComponent(whatsappMessage)}`;
-                        window.open(whatsappUrl, '_blank');
-                    } else {
-                        throw new Error(result.message || 'حدث خطأ غير متوقع');
+                            
+                            const whatsappUrl = `https://wa.me/213555840120?text=${encodeURIComponent(whatsappMessage)}`;
+                            window.open(whatsappUrl, '_blank');
+                        } else {
+                            throw new Error(result.message || 'حدث خطأ غير متوقع');
+                        }
+                    } catch (e) {
+                        // إذا فشل تحليل JSON، افترض أن الإرسال نجح إذا كانت الاستجابة غير فارغة
+                        if (responseText.includes('تم')) {
+                            showSuccessMessage(formData);
+                            $('#productOrderForm')[0].reset();
+                            $('#quantity').val(5);
+                        } else {
+                            throw new Error(responseText || 'حدث خطأ في معالجة الاستجابة');
+                        }
                     }
                 } catch (error) {
                     console.error('Error:', error);
